@@ -1,0 +1,47 @@
+Minimal Working Example
+
+If you dont have data start from 1, else start from 5:
+
+1. Build Vertices
+first BuildNodes.py is run to preprocess GPS data. the original data has following properties:
+id, x, y, bearing
+BuildNodes adds:
+new_bearing, direction, dPhi and flagUseCamera
+
+2. Create Adjacency Matrix
+From this file we then run
+gps_data_to_cost.py
+to create the adjacency matrix which functions as input to the network
+
+3. Combine
+Afterwards we aggregate and combine the data in two steps using
+3.1. python aggregate_combine_data.py "all"
+3.2. python aggregate_combine_data.py "concat"
+Creates a .npz file
+
+4. Densities
+We must create the densities of the traffic camera here we use
+dl_dens_estimation.py run by:
+python dl_dens_estimation.py /path/to/diretory
+
+it saves it in .results from current working directory
+
+Finally one should have two files:
+data.npz and
+tofromcost.csv
+
+5. Split data
+Run pre.py  on the .npz file to split into training, validation and test sets
+
+5. Train model
+Run train.py, this has a broad range of parameters, most importantly the
+--data 
+and
+--adjdata
+
+
+
+Intermediate steps include:
+sortbadvertices.py 
+which is a manual process of checking all cameras to see which should be discarded for some reason,
+e.g. poor quality data, field of view issues, camera malfunction etc.
